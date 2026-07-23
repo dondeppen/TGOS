@@ -18,19 +18,45 @@ TGOS is designed to:
 
 ## Current milestone
 
-**Genesis v0.2 — Command Center Shell**
+**Genesis v0.6 — Multi-User COMMAND**
 
 The current application includes:
 
 - TGOS Genesis landing screen
-- Working `/command-center` route
+- Protected `/command-center` route
+- Multi-user username and password authentication
+- Signed HTTP-only session cookies
+- Owner and marketing roles
+- Dynamic user greeting and role display
 - Executive operational metrics
 - Intelligence recommendation panel
-- Service pulse indicators
+- Operational health indicators
 - Recent activity feed
 - Navigation placeholders for future modules
 
 The displayed business information is demonstration data. No production customer, service, inventory, or financial data is connected yet.
+
+## Authentication configuration
+
+Copy `.env.example` to `.env.local` for local development and replace every placeholder value.
+
+```bash
+cp .env.example .env.local
+```
+
+TGOS currently supports these configured users:
+
+```text
+TGOS_OWNER_USERNAME
+TGOS_OWNER_PASSWORD
+TGOS_MARKETING_USERNAME
+TGOS_MARKETING_PASSWORD
+TGOS_SESSION_SECRET
+```
+
+`TGOS_SESSION_SECRET` must be a long, random value and must not match either user's password. Store production values in Vercel Environment Variables rather than committing them to GitHub.
+
+For a temporary transition, existing deployments may continue using `TGOS_USERNAME` and `TGOS_PASSWORD` as the owner credentials. The role-specific variables should be used for all new deployments.
 
 ## Planned modules
 
@@ -51,13 +77,14 @@ The displayed business information is demonstration data. No production customer
 - React 19
 - TypeScript
 - Tailwind CSS 4
-- Planned: Supabase PostgreSQL and authentication
+- Signed server-side authentication sessions
+- Planned: Supabase PostgreSQL and durable identity management
 - Planned: OpenAI intelligence services
-- Planned deployment: Vercel at `portal.tekguyondemand.com`
+- Deployment target: Vercel at `portal.tekguyondemand.com`
 
 ## Local development
 
-Install dependencies and start the development server:
+Install dependencies, configure `.env.local`, and start the development server:
 
 ```bash
 npm install
@@ -78,24 +105,31 @@ npm run start
 ## Project structure
 
 ```text
-src/app/
-├── page.tsx
-└── command-center/
-    └── page.tsx
+src/
+├── app/
+│   ├── api/auth/
+│   ├── command-center/
+│   ├── login/
+│   └── page.tsx
+├── components/dashboard/
+└── lib/
+    ├── auth.ts
+    └── tgos/
 
 docs/
 └── architecture.md
 ```
 
-The structure will expand as domain modules and backend services are introduced.
+The structure will expand as domain modules, persistence, integrations, and role-based authorization policies are introduced.
 
 ## Development workflow
 
-- `main` is the stable branch.
-- New work is developed on `agent/*` feature branches.
-- Feature branches should be reviewed through pull requests before merging.
+- `main` is the stable production branch.
+- New work is developed on `feature/*` branches.
+- Feature branches must be reviewed through pull requests before merging.
+- Run `npm run lint` and `npm run build` before merging.
 - Secrets must never be committed. Use local environment variables and deployment-provider secret storage.
 
 ## Status
 
-TGOS is currently an early product foundation. The interface and product direction are established; authentication, persistence, integrations, intelligence processing, and production deployment remain upcoming milestones.
+TGOS is an early operational platform foundation. The interface, recommendation engine, protected COMMAND dashboard, and first multi-user authentication layer are established. Persistence, live integrations, granular permissions, audit history, and production business data remain upcoming milestones.
