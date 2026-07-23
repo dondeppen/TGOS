@@ -5,3 +5,4 @@ export { OperationalActivityTimeline } from "./OperationalActivityTimeline";
 export { MetricsGrid } from "./MetricsGrid";
 export { BusinessReadinessPanel } from "./BusinessReadinessPanel";
 export { ActiveDecisionsPanel } from "./ActiveDecisionsPanel";
+export { FieldIntelligencePanel } from "./FieldIntelligencePanel";
