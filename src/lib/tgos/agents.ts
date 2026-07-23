@@ -19,7 +19,7 @@ export interface TgosAgent {
   id: string;
   name: string;
   description: string;
-  subscriptions: TgosEvent["type"][] | ["*"];
+  subscriptions: Array<TgosEvent["type"] | "*">;
   evaluate: (
     event: TgosEvent,
     context: TgosAgentContext,
