@@ -20,6 +20,7 @@ import {
   BusinessReadinessPanel,
   ActiveDecisionsPanel,
   FieldIntelligencePanel,
+  LearningIntelligencePanel,
 } from "@/components/dashboard";
 
 const navigation = [
@@ -29,6 +30,7 @@ const navigation = [
   ["Assets", "Equipment"],
   ["Service", "Dispatch"],
   ["Inventory", "Stock"],
+  ["Learning", "Intelligence"],
   ["Knowledge", "Memory"],
   ["Intelligence", "Agents"],
   ["Reports", "Analytics"],
@@ -253,6 +255,7 @@ export default async function CommandCenterPage() {
           <MetricsGrid metrics={metrics} />
           <CommandRecommendationPanel recommendation={highestValueAction ?? null} />
           <FieldIntelligencePanel />
+          <LearningIntelligencePanel />
 
           <section className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <div className="col-span-full">
@@ -296,8 +299,8 @@ export default async function CommandCenterPage() {
           </div>
 
           <footer className="flex flex-col gap-2 py-7 text-xs text-slate-600 sm:flex-row sm:items-center sm:justify-between">
-            <span>TGOS v0.7 · Mission Control Preview</span>
-            <span>Observe · Remember · Reason · Recommend · Act</span>
+            <span>TGOS v0.8 · Learning Intelligence</span>
+            <span>Observe · Remember · Learn · Reason · Recommend · Act</span>
           </footer>
         </section>
 
