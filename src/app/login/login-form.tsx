@@ -35,7 +35,7 @@ export function LoginForm() {
     <form onSubmit={handleSubmit} className="mt-8 space-y-5">
       <div>
         <label htmlFor="username" className="mb-2 block text-sm text-slate-300">
-          Owner ID
+          Username
         </label>
         <input
           required
@@ -43,12 +43,12 @@ export function LoginForm() {
           className="w-full rounded-xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-white outline-none transition placeholder:text-slate-600 focus:border-cyan-300 focus:ring-2 focus:ring-cyan-300/20"
           id="username"
           name="username"
-          placeholder="Enter owner ID"
+          placeholder="Enter your username"
         />
       </div>
       <div>
         <label htmlFor="password" className="mb-2 block text-sm text-slate-300">
-          Access key
+          Password
         </label>
         <input
           required
@@ -56,7 +56,7 @@ export function LoginForm() {
           className="w-full rounded-xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-white outline-none transition placeholder:text-slate-600 focus:border-cyan-300 focus:ring-2 focus:ring-cyan-300/20"
           id="password"
           name="password"
-          placeholder="Enter access key"
+          placeholder="Enter your password"
           type="password"
         />
       </div>
