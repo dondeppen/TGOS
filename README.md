@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TGOS — Tek Guy Operating System
 
-## Getting Started
+TGOS is the operational intelligence platform for Tek Guy On Demand.
 
-First, run the development server:
+Its purpose is to connect business systems, interpret operational activity, and answer one central question:
+
+> Given everything TGOS knows, what should happen next?
+
+## Product principles
+
+TGOS is designed to:
+
+- Observe activity across connected systems
+- Organize customers, locations, assets, service, inventory, and knowledge
+- Learn from operational history
+- Recommend the next best action
+- Automate repeatable work with appropriate human control
+
+## Current milestone
+
+**Genesis v0.2 — Command Center Shell**
+
+The current application includes:
+
+- TGOS Genesis landing screen
+- Working `/command-center` route
+- Executive operational metrics
+- Intelligence recommendation panel
+- Service pulse indicators
+- Recent activity feed
+- Navigation placeholders for future modules
+
+The displayed business information is demonstration data. No production customer, service, inventory, or financial data is connected yet.
+
+## Planned modules
+
+- Command Center
+- Customers
+- Locations
+- Assets
+- Service and dispatch
+- Inventory and consumables
+- Knowledge
+- Intelligence
+- Reports
+- Settings and administration
+
+## Technology
+
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- Planned: Supabase PostgreSQL and authentication
+- Planned: OpenAI intelligence services
+- Planned deployment: Vercel at `portal.tekguyondemand.com`
+
+## Local development
+
+Install dependencies and start the development server:
+
+```bash
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000`.
+
+Useful commands:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run lint
+npm run build
+npm run start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+src/app/
+├── page.tsx
+└── command-center/
+    └── page.tsx
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+docs/
+└── architecture.md
+```
 
-## Learn More
+The structure will expand as domain modules and backend services are introduced.
 
-To learn more about Next.js, take a look at the following resources:
+## Development workflow
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `main` is the stable branch.
+- New work is developed on `agent/*` feature branches.
+- Feature branches should be reviewed through pull requests before merging.
+- Secrets must never be committed. Use local environment variables and deployment-provider secret storage.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Status
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+TGOS is currently an early product foundation. The interface and product direction are established; authentication, persistence, integrations, intelligence processing, and production deployment remain upcoming milestones.

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
@@ -6,9 +8,7 @@ export default function Home() {
           Operational Intelligence Platform
         </p>
 
-        <h1 className="text-6xl font-bold tracking-tight sm:text-8xl">
-          TGOS
-        </h1>
+        <h1 className="text-6xl font-bold tracking-tight sm:text-8xl">TGOS</h1>
 
         <p className="mt-4 text-xl text-slate-300 sm:text-2xl">
           Tek Guy Operating System
@@ -19,16 +19,16 @@ export default function Home() {
         </p>
 
         <div className="mt-10">
-          <button
-            type="button"
-            className="rounded-xl bg-cyan-400 px-6 py-3 font-semibold text-slate-950 transition hover:bg-cyan-300"
+          <Link
+            href="/command-center"
+            className="inline-flex rounded-xl bg-cyan-400 px-6 py-3 font-semibold text-slate-950 transition hover:bg-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-offset-2 focus:ring-offset-slate-950"
           >
             Enter Command Center
-          </button>
+          </Link>
         </div>
 
         <p className="mt-16 text-sm text-slate-500">
-          Genesis v0.1 · Powered by Tek Guy On Demand
+          Genesis v0.2 · Powered by Tek Guy On Demand
         </p>
       </section>
     </main>
