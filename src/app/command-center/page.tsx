@@ -25,6 +25,7 @@ import {
   ExperienceEnginePanel,
   ConfigurationPhotoIntelligencePanel,
   AssetDigitalTwinPanel,
+  ObjectViewerPanel,
 } from "@/components/dashboard";
 
 const navigation = [
@@ -258,6 +259,7 @@ export default async function CommandCenterPage() {
 
           <MetricsGrid metrics={metrics} />
           <CommandRecommendationPanel recommendation={highestValueAction ?? null} />
+          <ObjectViewerPanel />
           <FieldIntelligencePanel />
           <LearningIntelligencePanel />
           <RepairDnaPanel />
