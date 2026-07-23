@@ -1,5 +1,12 @@
 import Link from "next/link";
 
+import { runTgosBrain } from "@/lib/tgos/brain";
+import {
+  seedEntities,
+  seedEvents,
+  seedRelationships,
+} from "@/lib/tgos/seed";
+
 const navigation = [
   ["Command Center", "Overview"],
   ["Customers", "CRM"],
@@ -13,42 +20,63 @@ const navigation = [
   ["Settings", "System"],
 ];
 
+const recommendations = runTgosBrain(seedEvents, {
+  entities: seedEntities,
+  relationships: seedRelationships,
+});
+
 const metrics = [
-  { label: "Open service calls", value: "12", note: "3 need scheduling" },
-  { label: "Scheduled today", value: "5", note: "First arrival 8:00 AM" },
-  { label: "Awaiting parts", value: "4", note: "2 orders overdue" },
-  { label: "Inventory alerts", value: "7", note: "Consumables below target" },
+  {
+    label: "Operational events",
+    value: String(seedEvents.length),
+    note: "Processed by the TGOS Brain",
+  },
+  {
+    label: "Recommendations",
+    value: String(recommendations.length),
+    note: "Generated from active rules",
+  },
+  {
+    label: "Tracked entities",
+    value: String(seedEntities.length),
+    note: "Customers, assets, service and finance",
+  },
+  {
+    label: "Critical or high",
+    value: String(
+      recommendations.filter((item) =>
+        ["critical", "high"].includes(item.priority),
+      ).length,
+    ),
+    note: "Require near-term attention",
+  },
 ];
 
-const recommendations = [
-  {
-    priority: "High",
-    title: "Replenish Xerox C9000 drums",
-    detail:
-      "Three tracked devices are approaching the replacement threshold. Prepare two drums now and verify one additional unit with the supplier.",
-  },
-  {
-    priority: "Action",
-    title: "Schedule two pending service requests",
-    detail:
-      "The requests have complete customer information but no assigned service window.",
-  },
-  {
-    priority: "Efficiency",
-    title: "Review tomorrow's route sequence",
-    detail:
-      "Two nearby calls can be grouped into the same service block to reduce travel time.",
-  },
-];
+const priorityStyles = {
+  critical: "text-rose-300 border-rose-300/20 bg-rose-300/10",
+  high: "text-amber-300 border-amber-300/20 bg-amber-300/10",
+  medium: "text-cyan-300 border-cyan-300/20 bg-cyan-300/10",
+  low: "text-slate-300 border-slate-600 bg-slate-800",
+};
 
-const activity = [
-  ["Service", "SSA Williamsport phone refresh prepared", "10 min ago"],
-  ["Inventory", "Xerox drum stock moved below target", "32 min ago"],
-  ["Customer", "New contact information added", "1 hr ago"],
-  ["System", "TGOS Genesis v0.2 branch created", "Today"],
-];
+const activity = seedEvents
+  .slice()
+  .sort(
+    (a, b) =>
+      new Date(b.occurredAt).getTime() - new Date(a.occurredAt).getTime(),
+  )
+  .map((event) => [
+    event.source,
+    event.type.replaceAll("_", " ").replaceAll(".", " · "),
+    new Date(event.occurredAt).toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+    }),
+  ]);
 
 export default function CommandCenterPage() {
+  const nextAction = recommendations[0];
+
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
       <div className="mx-auto flex min-h-screen max-w-[1600px]">
@@ -58,7 +86,7 @@ export default function CommandCenterPage() {
               Tek Guy
             </p>
             <h1 className="mt-2 text-3xl font-bold tracking-tight">TGOS</h1>
-            <p className="mt-1 text-sm text-slate-500">Genesis v0.2</p>
+            <p className="mt-1 text-sm text-slate-500">Genesis v0.3</p>
           </Link>
 
           <nav className="space-y-1" aria-label="TGOS navigation">
@@ -84,13 +112,13 @@ export default function CommandCenterPage() {
 
           <div className="mt-auto rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">System status</span>
+              <span className="text-sm font-medium">Brain status</span>
               <span className="rounded-full bg-emerald-400/10 px-2 py-1 text-xs font-semibold text-emerald-300">
-                Online
+                Processing
               </span>
             </div>
             <p className="mt-3 text-xs leading-5 text-slate-500">
-              Command Center shell is active. Live integrations will be connected in upcoming milestones.
+              {seedEvents.length} events evaluated against operational rules. The current feed uses seeded v0.3 data.
             </p>
           </div>
         </aside>
@@ -103,13 +131,13 @@ export default function CommandCenterPage() {
                 Command Center
               </h2>
               <p className="mt-2 text-slate-400">
-                Good morning, Don. Here is what needs attention next.
+                Good afternoon, Don. TGOS evaluated the current event stream and identified what needs attention next.
               </p>
             </div>
 
             <div className="flex items-center gap-3">
               <button className="rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-sm font-medium text-slate-200 hover:border-slate-600">
-                Add record
+                Add event
               </button>
               <button className="rounded-xl bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-cyan-300">
                 Ask TGOS
@@ -142,30 +170,33 @@ export default function CommandCenterPage() {
                   </p>
                   <h3 className="mt-3 text-2xl font-bold">Recommended actions</h3>
                   <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-                    These recommendations use demonstration data for the v0.2 interface. Future releases will calculate them from connected service, inventory, customer, and financial systems.
+                    These actions were generated by the v0.3 rules engine from service, inventory, asset and financial events.
                   </p>
                 </div>
                 <span className="w-fit rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs font-semibold text-cyan-200">
-                  3 insights
+                  {recommendations.length} insights
                 </span>
               </div>
 
               <div className="mt-6 space-y-4">
                 {recommendations.map((item) => (
                   <article
-                    key={item.title}
+                    key={item.id}
                     className="rounded-2xl border border-slate-700/70 bg-slate-950/55 p-5"
                   >
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                       <div>
-                        <span className="text-xs font-semibold uppercase tracking-wider text-cyan-300">
-                          {item.priority}
+                        <span
+                          className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold uppercase tracking-wider ${priorityStyles[item.priority]}`}
+                        >
+                          {item.priority} · {item.category}
                         </span>
-                        <h4 className="mt-2 text-lg font-semibold">{item.title}</h4>
+                        <h4 className="mt-3 text-lg font-semibold">{item.title}</h4>
                         <p className="mt-2 text-sm leading-6 text-slate-400">{item.detail}</p>
+                        <p className="mt-3 text-xs text-slate-600">Rule: {item.ruleId}</p>
                       </div>
                       <button className="shrink-0 rounded-lg border border-slate-700 px-3 py-2 text-xs font-semibold text-slate-300 hover:border-cyan-300/60 hover:text-cyan-200">
-                        Review
+                        {item.actionLabel}
                       </button>
                     </div>
                   </article>
@@ -176,48 +207,48 @@ export default function CommandCenterPage() {
             <section className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-slate-400">Today's operations</p>
-                  <h3 className="mt-1 text-xl font-bold">Service pulse</h3>
+                  <p className="text-sm text-slate-400">Brain output</p>
+                  <h3 className="mt-1 text-xl font-bold">Decision pulse</h3>
                 </div>
                 <span className="rounded-full bg-amber-400/10 px-3 py-1 text-xs font-semibold text-amber-300">
-                  4 alerts
+                  {recommendations.filter((item) => item.priority !== "low").length} active
                 </span>
               </div>
 
               <div className="mt-6 space-y-5">
                 <div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-400">Scheduled capacity</span>
-                    <span className="font-semibold">68%</span>
+                    <span className="text-slate-400">Events processed</span>
+                    <span className="font-semibold">100%</span>
                   </div>
                   <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-800">
-                    <div className="h-full w-[68%] rounded-full bg-cyan-400" />
+                    <div className="h-full w-full rounded-full bg-cyan-400" />
                   </div>
                 </div>
                 <div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-400">Parts readiness</span>
-                    <span className="font-semibold">82%</span>
+                    <span className="text-slate-400">Entities linked</span>
+                    <span className="font-semibold">{seedEntities.length}</span>
                   </div>
                   <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-800">
-                    <div className="h-full w-[82%] rounded-full bg-emerald-400" />
+                    <div className="h-full w-[86%] rounded-full bg-emerald-400" />
                   </div>
                 </div>
                 <div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-400">Documentation complete</span>
-                    <span className="font-semibold">74%</span>
+                    <span className="text-slate-400">Rules producing insight</span>
+                    <span className="font-semibold">{recommendations.length}</span>
                   </div>
                   <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-800">
-                    <div className="h-full w-[74%] rounded-full bg-violet-400" />
+                    <div className="h-full w-[92%] rounded-full bg-violet-400" />
                   </div>
                 </div>
               </div>
 
               <div className="mt-7 rounded-2xl border border-slate-800 bg-slate-950/50 p-4">
-                <p className="text-sm font-semibold">Next scheduled action</p>
+                <p className="text-sm font-semibold">What should happen next?</p>
                 <p className="mt-2 text-sm leading-6 text-slate-400">
-                  Review the first dispatch window and confirm required parts before technicians begin travel.
+                  {nextAction?.title ?? "No immediate action is required."}
                 </p>
               </div>
             </section>
@@ -226,24 +257,24 @@ export default function CommandCenterPage() {
           <section className="mt-6 rounded-3xl border border-slate-800 bg-slate-900/60 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-400">System activity</p>
-                <h3 className="mt-1 text-xl font-bold">Recent updates</h3>
+                <p className="text-sm text-slate-400">Event stream</p>
+                <h3 className="mt-1 text-xl font-bold">Recent operational events</h3>
               </div>
-              <button className="text-sm font-medium text-cyan-300 hover:text-cyan-200">
-                View all
-              </button>
+              <span className="text-sm font-medium text-cyan-300">
+                Seeded v0.3 feed
+              </span>
             </div>
 
             <div className="mt-5 divide-y divide-slate-800">
               {activity.map(([type, description, time]) => (
                 <div
                   key={`${type}-${description}`}
-                  className="grid gap-2 py-4 sm:grid-cols-[110px_1fr_auto] sm:items-center"
+                  className="grid gap-2 py-4 sm:grid-cols-[140px_1fr_auto] sm:items-center"
                 >
                   <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                     {type}
                   </span>
-                  <span className="text-sm text-slate-200">{description}</span>
+                  <span className="text-sm capitalize text-slate-200">{description}</span>
                   <span className="text-xs text-slate-600">{time}</span>
                 </div>
               ))}
@@ -251,7 +282,7 @@ export default function CommandCenterPage() {
           </section>
 
           <footer className="flex flex-col gap-2 py-7 text-xs text-slate-600 sm:flex-row sm:items-center sm:justify-between">
-            <span>TGOS Genesis v0.2</span>
+            <span>TGOS Genesis v0.3</span>
             <span>Observe · Organize · Learn · Recommend</span>
           </footer>
         </section>
