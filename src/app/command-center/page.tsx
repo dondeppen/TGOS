@@ -192,7 +192,10 @@ export default async function CommandCenterPage() {
               Signed in
             </p>
             <p className="mt-2 font-semibold text-slate-100">{session.displayName}</p>
-            <p className="mt-1 text-sm text-cyan-300">{roleLabel}</p>
+            <div className="mt-1 flex items-center justify-between gap-3">
+              <p className="text-sm text-cyan-300">{roleLabel}</p>
+              <SignOutButton />
+            </div>
           </div>
 
           <nav className="space-y-1" aria-label="TGOS navigation">
