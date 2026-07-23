@@ -19,6 +19,7 @@ import {
   MetricsGrid,
   BusinessReadinessPanel,
   ActiveDecisionsPanel,
+  FieldIntelligencePanel,
 } from "@/components/dashboard";
 
 const navigation = [
@@ -251,6 +252,7 @@ export default async function CommandCenterPage() {
 
           <MetricsGrid metrics={metrics} />
           <CommandRecommendationPanel recommendation={highestValueAction ?? null} />
+          <FieldIntelligencePanel />
 
           <section className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <div className="col-span-full">
@@ -294,7 +296,7 @@ export default async function CommandCenterPage() {
           </div>
 
           <footer className="flex flex-col gap-2 py-7 text-xs text-slate-600 sm:flex-row sm:items-center sm:justify-between">
-            <span>TGOS Genesis v0.6 · Multi-User COMMAND</span>
+            <span>TGOS v0.7 · Mission Control Preview</span>
             <span>Observe · Remember · Reason · Recommend · Act</span>
           </footer>
         </section>
