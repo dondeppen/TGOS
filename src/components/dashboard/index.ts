@@ -11,3 +11,4 @@ export { RepairDnaPanel } from "./RepairDnaPanel";
 export { ExperienceEnginePanel } from "./ExperienceEnginePanel";
 export { ConfigurationPhotoIntelligencePanel } from "./ConfigurationPhotoIntelligencePanel";
 export { AssetDigitalTwinPanel } from "./AssetDigitalTwinPanel";
+export { ObjectViewerPanel } from "./ObjectViewerPanel";
