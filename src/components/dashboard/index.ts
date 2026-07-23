@@ -7,3 +7,7 @@ export { BusinessReadinessPanel } from "./BusinessReadinessPanel";
 export { ActiveDecisionsPanel } from "./ActiveDecisionsPanel";
 export { FieldIntelligencePanel } from "./FieldIntelligencePanel";
 export { LearningIntelligencePanel } from "./LearningIntelligencePanel";
+export { RepairDnaPanel } from "./RepairDnaPanel";
+export { ExperienceEnginePanel } from "./ExperienceEnginePanel";
+export { ConfigurationPhotoIntelligencePanel } from "./ConfigurationPhotoIntelligencePanel";
+export { AssetDigitalTwinPanel } from "./AssetDigitalTwinPanel";
