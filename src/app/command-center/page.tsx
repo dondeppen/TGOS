@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 import { SignOutButton } from "./sign-out-button";
+import { readSessionToken, SESSION_COOKIE } from "@/lib/auth";
 import { runTgosBrain } from "@/lib/tgos/brain";
 import { RecommendationBroker } from "@/lib/tgos/recommendation-broker";
 import {
@@ -74,7 +77,18 @@ function getGreeting(): string {
   return "Good evening";
 }
 
-export default function CommandCenterPage() {
+function formatRole(role: "owner" | "marketing"): string {
+  return role === "owner" ? "Owner" : "Marketing";
+}
+
+export default async function CommandCenterPage() {
+  const cookieStore = await cookies();
+  const session = readSessionToken(cookieStore.get(SESSION_COOKIE)?.value);
+
+  if (!session) {
+    redirect("/login");
+  }
+
   const now = new Date();
   const operationalStatus = criticalCount > 0 ? "ATTENTION" : "GREEN";
   const statusClasses =
@@ -157,10 +171,11 @@ export default function CommandCenterPage() {
     },
   ];
 
+  const roleLabel = formatRole(session.role);
+
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
       <div className="mx-auto flex min-h-screen max-w-[1600px]">
-        {/* Sidebar Navigation */}
         <aside className="hidden w-72 shrink-0 border-r border-slate-800 bg-slate-950/90 px-5 py-6 lg:flex lg:flex-col">
           <Link href="/" className="mb-9 block">
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-400">
@@ -171,6 +186,14 @@ export default function CommandCenterPage() {
             </h1>
             <p className="mt-2 text-sm text-slate-500">Operational intelligence</p>
           </Link>
+
+          <div className="mb-5 rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
+              Signed in
+            </p>
+            <p className="mt-2 font-semibold text-slate-100">{session.displayName}</p>
+            <p className="mt-1 text-sm text-cyan-300">{roleLabel}</p>
+          </div>
 
           <nav className="space-y-1" aria-label="TGOS navigation">
             {navigation.map(([label, descriptor], index) => (
@@ -205,31 +228,27 @@ export default function CommandCenterPage() {
               </span>
             </div>
             <p className="mt-3 text-xs leading-5 text-slate-500">
-              {seedEvents.length} events processed, {rawRecommendations.length}
-              {" "}agent recommendations evaluated, and {recommendations.length}
-              {" "}decisions brokered.
+              {seedEvents.length} events processed, {rawRecommendations.length}{" "}
+              agent recommendations evaluated, and {recommendations.length}{" "}
+              decisions brokered.
             </p>
           </div>
         </aside>
 
-        {/* Main Content */}
         <section className="min-w-0 flex-1 px-5 py-6 sm:px-8 lg:px-10">
-          {/* Executive Briefing */}
           <ExecutiveBriefing
             greeting={getGreeting()}
             dateFormatted={dateFormatted}
             operationalStatus={operationalStatus}
             statusClasses={statusClasses}
             summary="I reviewed the current operational picture and determined what matters most next."
+            displayName={session.displayName}
+            roleLabel={roleLabel}
           />
 
-          {/* Key Metrics Grid */}
           <MetricsGrid metrics={metrics} />
-
-          {/* Command Recommendation Panel */}
           <CommandRecommendationPanel recommendation={highestValueAction ?? null} />
 
-          {/* Operational Health Cards */}
           <section className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <div className="col-span-full">
               <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">
@@ -242,7 +261,6 @@ export default function CommandCenterPage() {
             ))}
           </section>
 
-          {/* Business Readiness and Active Decisions */}
           <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_1.2fr]">
             <BusinessReadinessPanel
               readiness={readiness.map(([label, value]) => ({
@@ -264,7 +282,6 @@ export default function CommandCenterPage() {
             />
           </div>
 
-          {/* Operational Activity Timeline */}
           <div className="mt-6">
             <OperationalActivityTimeline
               activities={activity}
@@ -273,14 +290,12 @@ export default function CommandCenterPage() {
             />
           </div>
 
-          {/* Footer */}
           <footer className="flex flex-col gap-2 py-7 text-xs text-slate-600 sm:flex-row sm:items-center sm:justify-between">
-            <span>TGOS Genesis v0.5 · COMMAND Intelligence Dashboard</span>
+            <span>TGOS Genesis v0.6 · Multi-User COMMAND</span>
             <span>Observe · Remember · Reason · Recommend · Act</span>
           </footer>
         </section>
 
-        {/* Sign Out Button */}
         <div className="absolute right-6 top-6 lg:hidden">
           <SignOutButton />
         </div>
