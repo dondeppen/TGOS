@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { SignOutButton } from "./sign-out-button";
 import { runTgosBrain } from "@/lib/tgos/brain";
 import { RecommendationBroker } from "@/lib/tgos/recommendation-broker";
 import {
@@ -143,9 +144,12 @@ export default function CommandCenterPage() {
                 </p>
               </div>
 
-              <div className={`w-fit rounded-2xl border px-5 py-4 ${statusClasses}`}>
-                <p className="text-xs font-semibold uppercase tracking-[0.25em]">Business status</p>
-                <p className="mt-1 text-2xl font-black">{operationalStatus}</p>
+              <div className="flex items-start gap-3">
+                <div className={`w-fit rounded-2xl border px-5 py-4 ${statusClasses}`}>
+                  <p className="text-xs font-semibold uppercase tracking-[0.25em]">Business status</p>
+                  <p className="mt-1 text-2xl font-black">{operationalStatus}</p>
+                </div>
+                <SignOutButton />
               </div>
             </div>
           </header>
